@@ -1,5 +1,6 @@
 *.iml
-.gradle
+gradlew
+gradlew.bat
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
@@ -11,3 +12,4 @@
 /app/src/androidTest
 /app/src/test
 /openCVLibrary320/build
+/openCVTutorial1CameraPreview/build
