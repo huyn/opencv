@@ -44,9 +44,24 @@ public class CameraInterface {
      */
     public void doOpenCamera(CamOpenOverCallback callback){
         Log.i(TAG, "Camera open....");
-        mCamera = Camera.open();
+        mCamera = Camera.open(findFrontFacingCamera());//Camera.CameraInfo.CAMERA_FACING_BACK);
         Log.i(TAG, "Camera open over....");
         callback.cameraHasOpened();
+    }
+
+    private int findFrontFacingCamera() {
+        int cameraId = -1;
+        // Search for the front facing camera
+        int numberOfCameras = Camera.getNumberOfCameras();
+        System.out.println("...camera numbers:" + numberOfCameras);
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                cameraId = i;
+            }
+        }
+        return cameraId;
     }
 
     /**开启预览

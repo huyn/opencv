@@ -7,6 +7,7 @@ import android.graphics.Matrix;
  * Created by huyaonan on 17/2/8.
  */
 public class ImageUtil {
+
     /**
      * 旋转Bitmap
      * @param b
@@ -19,4 +20,5 @@ public class ImageUtil {
         Bitmap rotaBitmap = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);
         return rotaBitmap;
     }
+
 }

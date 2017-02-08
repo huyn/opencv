@@ -23,12 +23,6 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
 
     public SurfaceViewPresenter(IPreviewController controller) {
         mController = controller;
-        new Thread(){
-            @Override
-            public void run() {
-                CameraInterface.getInstance().doOpenCamera(SurfaceViewPresenter.this);
-            }
-        }.start();
         setContentView(R.layout.activity_preview_surfaceview);
     }
 
@@ -46,6 +40,12 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
         mTakePhoto = (Button)findViewById(R.id.preview_takephoto);
 
         initViewParams();
+        mSurface.addListener(new PreviewSurfaceView.OnSurfaceViewStateListener() {
+            @Override
+            public void onSurfaceCreated(SurfaceHolder holder) {
+                CameraInterface.getInstance().doOpenCamera(SurfaceViewPresenter.this);
+            }
+        });
         mTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -16,6 +16,7 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     CameraInterface mCameraInterface;
     Context mContext;
     SurfaceHolder mSurfaceHolder;
+    private OnSurfaceViewStateListener mListener;
     public PreviewSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -28,6 +29,8 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.i(TAG, "surfaceCreated...");
+        if(mListener != null)
+            mListener.onSurfaceCreated(holder);
     }
 
     @Override
@@ -42,6 +45,14 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     }
     public SurfaceHolder getSurfaceHolder(){
         return mSurfaceHolder;
+    }
+
+    public interface OnSurfaceViewStateListener {
+        public void onSurfaceCreated(SurfaceHolder holder);
+    }
+
+    public void addListener(OnSurfaceViewStateListener listener) {
+        this.mListener = listener;
     }
 
 }

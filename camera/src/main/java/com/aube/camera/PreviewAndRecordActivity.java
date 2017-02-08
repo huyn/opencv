@@ -1,6 +1,7 @@
 package com.aube.camera;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
@@ -30,5 +31,10 @@ public class PreviewAndRecordActivity extends Activity implements IPreviewContro
     @Override
     public View findView(int id) {
         return findViewById(id);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }
