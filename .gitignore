@@ -13,3 +13,5 @@ gradlew.bat
 /app/src/test
 /openCVLibrary320/build
 /openCVTutorial1CameraPreview/build
+/camera/src/androidTest
+/camera/src/test
