@@ -1,18 +1,17 @@
 package com.aube.camera.presenter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
-import android.os.Build;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.aube.camera.R;
+import com.aube.camera.presenter.impl.CameraInterface;
 import com.aube.camera.util.DisplayUtil;
-import com.aube.camera.v21.CameraInstance;
-import com.aube.camera.v21.CameraTextureInstanceV21;
+import com.aube.camera.presenter.impl.CameraInstance;
+import com.aube.camera.view.PreviewSurfaceView;
 
 /**
  * Created by huyaonan on 17/2/8.

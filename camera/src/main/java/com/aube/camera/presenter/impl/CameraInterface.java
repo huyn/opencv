@@ -1,4 +1,4 @@
-package com.aube.camera.presenter;
+package com.aube.camera.presenter.impl;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

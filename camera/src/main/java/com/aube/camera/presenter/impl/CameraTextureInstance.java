@@ -1,4 +1,4 @@
-package com.aube.camera.presenter;
+package com.aube.camera.presenter.impl;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -13,8 +13,7 @@ import com.aube.camera.util.CamParaUtil;
 import com.aube.camera.util.DisplayUtil;
 import com.aube.camera.util.FileUtil;
 import com.aube.camera.util.ImageUtil;
-import com.aube.camera.v21.AutoFitTextureView;
-import com.aube.camera.v21.CameraInstance;
+import com.aube.camera.view.AutoFitTextureView;
 
 import java.io.IOException;
 import java.util.List;

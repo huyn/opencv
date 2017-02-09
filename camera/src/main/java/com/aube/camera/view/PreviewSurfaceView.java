@@ -1,4 +1,4 @@
-package com.aube.camera.presenter;
+package com.aube.camera.view;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -6,6 +6,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.aube.camera.presenter.impl.CameraInterface;
 
 /**
  * Created by huyaonan on 17/2/8.

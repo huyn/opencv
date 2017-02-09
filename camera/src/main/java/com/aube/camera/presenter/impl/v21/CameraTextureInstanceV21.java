@@ -1,4 +1,4 @@
-package com.aube.camera.v21;
+package com.aube.camera.presenter.impl.v21;
 
 import android.Manifest;
 import android.app.Activity;
@@ -42,6 +42,8 @@ import android.view.TextureView;
 import android.widget.Toast;
 
 import com.aube.camera.R;
+import com.aube.camera.presenter.impl.CameraInstance;
+import com.aube.camera.view.AutoFitTextureView;
 
 import java.io.File;
 import java.io.FileOutputStream;

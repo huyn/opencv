@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.aube.camera.R;
+import com.aube.camera.presenter.impl.CameraTextureInstance;
 import com.aube.camera.util.DisplayUtil;
-import com.aube.camera.v21.AutoFitTextureView;
-import com.aube.camera.v21.CameraInstance;
-import com.aube.camera.v21.CameraTextureInstanceV21;
+import com.aube.camera.view.AutoFitTextureView;
+import com.aube.camera.presenter.impl.CameraInstance;
+import com.aube.camera.presenter.impl.v21.CameraTextureInstanceV21;
 
 /**
  * Created by huyaonan on 17/2/8.

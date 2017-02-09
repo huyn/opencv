@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.aube.camera.v21;
+package com.aube.camera.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
