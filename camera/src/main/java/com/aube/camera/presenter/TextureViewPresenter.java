@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
-import android.view.SurfaceHolder;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,13 +17,12 @@ import com.aube.camera.v21.CameraTextureInstanceV21;
 /**
  * Created by huyaonan on 17/2/8.
  */
-public class TextureViewPresenter implements IPreviewPresenter, CameraInterface.CamOpenOverCallback {
+public class TextureViewPresenter implements IPreviewPresenter {
 
     private IPreviewController mController;
 
     private AutoFitTextureView mTexture;
     private Button mTakePhoto;
-    private float previewRate = -1f;
 
     private CameraInstance mCameraInstance;
 
@@ -95,7 +92,6 @@ public class TextureViewPresenter implements IPreviewPresenter, CameraInterface.
         Point p = DisplayUtil.getScreenMetrics(getContext());
         params.width = p.x;
         params.height = p.y;
-        previewRate = DisplayUtil.getScreenRate(getContext()); //默认全屏的比例预览
         mTexture.setLayoutParams(params);
 
         //手动设置拍照ImageButton的大小为120dip×120dip,原图片大小是64×64
@@ -103,10 +99,6 @@ public class TextureViewPresenter implements IPreviewPresenter, CameraInterface.
         p2.width = DisplayUtil.dip2px(getContext(), 80);
         p2.height = DisplayUtil.dip2px(getContext(), 80);
         mTakePhoto.setLayoutParams(p2);
-    }
-
-    @Override
-    public void cameraHasOpened() {
     }
 
 }

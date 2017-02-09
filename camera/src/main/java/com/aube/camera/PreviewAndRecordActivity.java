@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.aube.camera.presenter.IPreviewController;
 import com.aube.camera.presenter.IPreviewPresenter;
+import com.aube.camera.presenter.SurfaceViewPresenter;
 import com.aube.camera.presenter.TextureViewPresenter;
 
 /**

@@ -1,7 +1,9 @@
 package com.aube.camera.presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Build;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.Button;
 
 import com.aube.camera.R;
 import com.aube.camera.util.DisplayUtil;
+import com.aube.camera.v21.CameraInstance;
+import com.aube.camera.v21.CameraTextureInstanceV21;
 
 /**
  * Created by huyaonan on 17/2/8.
@@ -21,9 +25,16 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
     private Button mTakePhoto;
     private float previewRate = -1f;
 
+    private CameraInstance mCameraInstance;
+
     public SurfaceViewPresenter(IPreviewController controller) {
         mController = controller;
         setContentView(R.layout.activity_preview_surfaceview);
+//        if(Build.VERSION.SDK_INT >= 21)
+//            mCameraInstance = new CameraTextureInstanceV21(mSurface, (Activity) getContext());
+//        else
+//            mCameraInstance = new CameraTextureInstance(mSurface, (Activity) getContext());
+//        mCameraInstance.onCreate();
     }
 
     @Override
@@ -50,6 +61,7 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
             @Override
             public void onClick(View view) {
                 CameraInterface.getInstance().doTakePicture();
+//                mCameraInstance.takePictureOrRecordVideo();
             }
         });
     }

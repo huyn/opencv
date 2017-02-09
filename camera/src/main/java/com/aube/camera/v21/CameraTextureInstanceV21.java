@@ -33,7 +33,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v13.app.ActivityCompat;
-import android.support.v13.app.FragmentCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Size;
@@ -119,8 +118,7 @@ public class CameraTextureInstanceV21 implements CameraInstance {
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
      * {@link TextureView}.
      */
-    private final TextureView.SurfaceTextureListener mSurfaceTextureListener
-            = new TextureView.SurfaceTextureListener() {
+    private final TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
 
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
@@ -983,7 +981,7 @@ public class CameraTextureInstanceV21 implements CameraInstance {
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            FragmentCompat.requestPermissions(parent,
+                            ActivityCompat.requestPermissions(getActivity(),
                                     new String[]{Manifest.permission.CAMERA},
                                     REQUEST_CAMERA_PERMISSION);
                         }

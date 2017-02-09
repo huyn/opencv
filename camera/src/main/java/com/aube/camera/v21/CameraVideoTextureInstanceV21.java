@@ -45,13 +45,11 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
-import android.support.v13.app.FragmentCompat;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.aube.camera.R;
@@ -117,18 +115,15 @@ public class CameraVideoTextureInstanceV21 implements CameraInstance {
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
      * {@link TextureView}.
      */
-    private TextureView.SurfaceTextureListener mSurfaceTextureListener
-            = new TextureView.SurfaceTextureListener() {
+    private TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
 
         @Override
-        public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
-                                              int width, int height) {
+        public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
             openCamera(width, height);
         }
 
         @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture,
-                                                int width, int height) {
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
             configureTransform(width, height);
         }
 
@@ -740,7 +735,7 @@ public class CameraVideoTextureInstanceV21 implements CameraInstance {
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            FragmentCompat.requestPermissions(parent, VIDEO_PERMISSIONS,
+                            ActivityCompat.requestPermissions(getActivity(), VIDEO_PERMISSIONS,
                                     REQUEST_VIDEO_PERMISSIONS);
                         }
                     })

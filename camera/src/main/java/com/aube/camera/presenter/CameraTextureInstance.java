@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
-import android.view.SurfaceHolder;
+import android.view.TextureView;
 
 import com.aube.camera.util.CamParaUtil;
+import com.aube.camera.util.DisplayUtil;
 import com.aube.camera.util.FileUtil;
 import com.aube.camera.util.ImageUtil;
 import com.aube.camera.v21.AutoFitTextureView;
@@ -21,12 +23,10 @@ import java.util.List;
  * Created by huyaonan on 17/2/8.
  */
 public class CameraTextureInstance implements CameraInstance {
-    private static final String TAG = "yanzi";
+    private static final String TAG = "CameraTextureInstance";
     private Camera mCamera;
     private Camera.Parameters mParams;
     private boolean isPreviewing = false;
-    private float mPreviwRate = -1f;
-    private static CameraTextureInstance mCameraInterface;
 
     /**
      * An {@link AutoFitTextureView} for camera preview.
@@ -35,6 +35,32 @@ public class CameraTextureInstance implements CameraInstance {
 
     private Activity mActivity;
 
+    /**
+     * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
+     * {@link TextureView}.
+     */
+    private final TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
+
+        @Override
+        public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
+            openCamera(width, height);
+        }
+
+        @Override
+        public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int width, int height) {
+        }
+
+        @Override
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
+            return true;
+        }
+
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture texture) {
+        }
+
+    };
+
     @Override
     public void onCreate() {
 
@@ -42,12 +68,27 @@ public class CameraTextureInstance implements CameraInstance {
 
     @Override
     public void onResume() {
-
+        // When the screen is turned off and turned back on, the SurfaceTexture is already
+        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
+        // a camera and start preview from here (otherwise, we wait until the surface is ready in
+        // the SurfaceTextureListener).
+        if (mTextureView.isAvailable()) {
+            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+        } else {
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+        }
     }
 
     @Override
     public void onPause() {
+        stopCamera();
+    }
 
+    @Override
+    public void takePictureOrRecordVideo() {
+        if (isPreviewing && (mCamera != null)) {
+            mCamera.takePicture(mShutterCallback, null, mJpegPictureCallback);
+        }
     }
 
     @Override
@@ -55,59 +96,38 @@ public class CameraTextureInstance implements CameraInstance {
         return false;
     }
 
-    public interface CamOpenOverCallback{
-        public void cameraHasOpened();
-    }
-
     public CameraTextureInstance(AutoFitTextureView textureView, Activity activity) {
         this.mTextureView = textureView;
         this.mActivity = activity;
     }
 
-    /**打开Camera
-     * @param callback
-     */
-    public void doOpenCamera(CamOpenOverCallback callback){
+    private Activity getActivity() {
+        return mActivity;
+    }
+
+    public void openCamera(int width, int height) {
         Log.i(TAG, "Camera open....");
-        mCamera = Camera.open(findFrontFacingCamera());//Camera.CameraInfo.CAMERA_FACING_BACK);
+        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        startPreview();
         Log.i(TAG, "Camera open over....");
-        callback.cameraHasOpened();
     }
 
-    private int findFrontFacingCamera() {
-        int cameraId = -1;
-        // Search for the front facing camera
-        int numberOfCameras = Camera.getNumberOfCameras();
-        System.out.println("...camera numbers:" + numberOfCameras);
-        for (int i = 0; i < numberOfCameras; i++) {
-            Camera.CameraInfo info = new Camera.CameraInfo();
-            Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                cameraId = i;
-            }
-        }
-        return cameraId;
-    }
-
-    /**开启预览
-     * @param holder
-     * @param previewRate
-     */
-    public void doStartPreview(SurfaceHolder holder, float previewRate){
+    public void startPreview() {
         Log.i(TAG, "doStartPreview...");
-        if(isPreviewing){
+        if (isPreviewing) {
             mCamera.stopPreview();
             return;
         }
-        if(mCamera != null){
+        if (mCamera != null) {
 
             mParams = mCamera.getParameters();
             mParams.setPictureFormat(PixelFormat.JPEG);//设置拍照后存储的图片格式
             CamParaUtil.getInstance().printSupportPictureSize(mParams);
             CamParaUtil.getInstance().printSupportPreviewSize(mParams);
             //设置PreviewSize和PictureSize
+            float previewRate = DisplayUtil.getScreenRate(getActivity());
             Camera.Size pictureSize = CamParaUtil.getInstance().getPropPictureSize(
-                    mParams.getSupportedPictureSizes(),previewRate, 800);
+                    mParams.getSupportedPictureSizes(), previewRate, 800);
             mParams.setPictureSize(pictureSize.width, pictureSize.height);
             Camera.Size previewSize = CamParaUtil.getInstance().getPropPreviewSize(
                     mParams.getSupportedPreviewSizes(), previewRate, 800);
@@ -117,20 +137,19 @@ public class CameraTextureInstance implements CameraInstance {
 
             CamParaUtil.getInstance().printSupportFocusMode(mParams);
             List<String> focusModes = mParams.getSupportedFocusModes();
-            if(focusModes.contains("continuous-video")){
+            if (focusModes.contains("continuous-video")) {
                 mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
             }
             mCamera.setParameters(mParams);
 
             try {
-                mCamera.setPreviewDisplay(holder);
+                mCamera.setPreviewTexture(mTextureView.getSurfaceTexture());
                 mCamera.startPreview();//开启预览
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             isPreviewing = true;
-            mPreviwRate = previewRate;
 
             mParams = mCamera.getParameters(); //重新get一次
             Log.i(TAG, "最终设置:PreviewSize--With = " + mParams.getPreviewSize().width
@@ -139,27 +158,17 @@ public class CameraTextureInstance implements CameraInstance {
                     + "Height = " + mParams.getPictureSize().height);
         }
     }
+
     /**
      * 停止预览，释放Camera
      */
-    public void doStopCamera(){
-        if(null != mCamera)
-        {
+    public void stopCamera() {
+        if (null != mCamera) {
             mCamera.setPreviewCallback(null);
             mCamera.stopPreview();
             isPreviewing = false;
-            mPreviwRate = -1f;
             mCamera.release();
             mCamera = null;
-        }
-    }
-
-    /**
-     * 拍照
-     */
-    public void doTakePicture(){
-        if(isPreviewing && (mCamera != null)){
-            mCamera.takePicture(mShutterCallback, null, mJpegPictureCallback);
         }
     }
 
@@ -186,14 +195,13 @@ public class CameraTextureInstance implements CameraInstance {
         public void onPictureTaken(byte[] data, Camera camera) {
             Log.i(TAG, "myJpegCallback:onPictureTaken...");
             Bitmap b = null;
-            if(null != data){
+            if (null != data) {
                 b = BitmapFactory.decodeByteArray(data, 0, data.length);//data是字节数据，将其解析成位图
                 mCamera.stopPreview();
                 isPreviewing = false;
             }
             //保存图片到sdcard
-            if(null != b)
-            {
+            if (null != b) {
                 //设置FOCUS_MODE_CONTINUOUS_VIDEO)之后，myParam.set("rotation", 90)失效。
                 //图片竟然不能旋转了，故这里要旋转下
                 Bitmap rotaBitmap = ImageUtil.getRotateBitmap(b, 90.0f);
@@ -204,4 +212,5 @@ public class CameraTextureInstance implements CameraInstance {
             isPreviewing = true;
         }
     };
+
 }
