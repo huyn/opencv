@@ -11,4 +11,7 @@ public interface IPreviewPresenter {
     public void findAndInitView();
     public View findViewById(int id);
     public Context getContext();
+    public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
+    public void onResume();
+    public void onPause();
 }

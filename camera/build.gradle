@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.aube.camera"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -22,4 +22,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    compile "com.android.support:support-v4:25.0.0"
+    compile "com.android.support:support-v13:25.0.0"
 }

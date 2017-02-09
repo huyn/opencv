@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.aube.camera.presenter.IPreviewController;
 import com.aube.camera.presenter.IPreviewPresenter;
-import com.aube.camera.presenter.SurfaceViewPresenter;
+import com.aube.camera.presenter.TextureViewPresenter;
 
 /**
  * Created by huyaonan on 17/2/8.
@@ -20,7 +20,8 @@ public class PreviewAndRecordActivity extends Activity implements IPreviewContro
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        iPresenter = new SurfaceViewPresenter(this);
+//        iPresenter = new SurfaceViewPresenter(this);
+        iPresenter = new TextureViewPresenter(this);
     }
 
     @Override
@@ -36,5 +37,24 @@ public class PreviewAndRecordActivity extends Activity implements IPreviewContro
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(iPresenter != null && iPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults))
+            return;
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        iPresenter.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        iPresenter.onPause();
     }
 }

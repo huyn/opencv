@@ -1,29 +1,42 @@
 package com.aube.camera.presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Build;
 import android.view.SurfaceHolder;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.aube.camera.R;
 import com.aube.camera.util.DisplayUtil;
+import com.aube.camera.v21.AutoFitTextureView;
+import com.aube.camera.v21.CameraInstance;
+import com.aube.camera.v21.CameraTextureInstanceV21;
 
 /**
  * Created by huyaonan on 17/2/8.
  */
-public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.CamOpenOverCallback {
+public class TextureViewPresenter implements IPreviewPresenter, CameraInterface.CamOpenOverCallback {
 
     private IPreviewController mController;
 
-    private PreviewSurfaceView mSurface;
+    private AutoFitTextureView mTexture;
     private Button mTakePhoto;
     private float previewRate = -1f;
 
-    public SurfaceViewPresenter(IPreviewController controller) {
+    private CameraInstance mCameraInstance;
+
+    public TextureViewPresenter(IPreviewController controller) {
         mController = controller;
-        setContentView(R.layout.activity_preview_surfaceview);
+        setContentView(R.layout.activity_preview_texture);
+        if(Build.VERSION.SDK_INT >= 21)
+            mCameraInstance = new CameraTextureInstanceV21(mTexture, (Activity) getContext());
+        else
+            mCameraInstance = new CameraTextureInstance(mTexture, (Activity) getContext());
+        mCameraInstance.onCreate();
     }
 
     @Override
@@ -36,16 +49,10 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
 
     @Override
     public void findAndInitView() {
-        mSurface = (PreviewSurfaceView) findViewById(R.id.preview_surfaceview);
+        mTexture = (AutoFitTextureView) findViewById(R.id.preview_surfaceview);
         mTakePhoto = (Button)findViewById(R.id.preview_takephoto);
 
         initViewParams();
-        mSurface.addListener(new PreviewSurfaceView.OnSurfaceViewStateListener() {
-            @Override
-            public void onSurfaceCreated(SurfaceHolder holder) {
-                CameraInterface.getInstance().doOpenCamera(SurfaceViewPresenter.this);
-            }
-        });
         mTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,26 +77,26 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
 
     @Override
     public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        return false;
+        return mCameraInstance.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public void onResume() {
-
+        mCameraInstance.onResume();
     }
 
     @Override
     public void onPause() {
-
+        mCameraInstance.onPause();
     }
 
     private void initViewParams(){
-        ViewGroup.LayoutParams params = mSurface.getLayoutParams();
+        ViewGroup.LayoutParams params = mTexture.getLayoutParams();
         Point p = DisplayUtil.getScreenMetrics(getContext());
         params.width = p.x;
         params.height = p.y;
         previewRate = DisplayUtil.getScreenRate(getContext()); //默认全屏的比例预览
-        mSurface.setLayoutParams(params);
+        mTexture.setLayoutParams(params);
 
         //手动设置拍照ImageButton的大小为120dip×120dip,原图片大小是64×64
         ViewGroup.LayoutParams p2 = mTakePhoto.getLayoutParams();
@@ -100,8 +107,6 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
 
     @Override
     public void cameraHasOpened() {
-        SurfaceHolder holder = mSurface.getSurfaceHolder();
-        CameraInterface.getInstance().doStartPreview(holder, previewRate);
     }
 
 }
