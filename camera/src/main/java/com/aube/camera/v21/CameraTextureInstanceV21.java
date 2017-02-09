@@ -756,7 +756,7 @@ public class CameraTextureInstanceV21 implements CameraInstance {
     /**
      * Initiate a still image capture.
      */
-    private void takePicture() {
+    public void takePictureOrRecordVideo() {
         lockFocus();
     }
 

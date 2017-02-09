@@ -56,7 +56,7 @@ public class TextureViewPresenter implements IPreviewPresenter, CameraInterface.
         mTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CameraInterface.getInstance().doTakePicture();
+                mCameraInstance.takePictureOrRecordVideo();
             }
         });
     }

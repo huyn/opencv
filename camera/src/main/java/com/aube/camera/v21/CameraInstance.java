@@ -7,5 +7,6 @@ public interface CameraInstance {
     public void onCreate();
     public void onResume();
     public void onPause();
+    public void takePictureOrRecordVideo();
     public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
 }
