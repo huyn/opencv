@@ -10,12 +10,32 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
+        ndk {
+            moduleName "gpuimage-library"
+            stl "gnustl_shared"
+            abiFilters "all"
+            ldLibs "log"
+        }
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 

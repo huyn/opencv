@@ -2,18 +2,20 @@ package com.aube.camera;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.aube.camera.presenter.IPreviewController;
 import com.aube.camera.presenter.IPreviewPresenter;
-import com.aube.camera.presenter.SurfaceViewPresenter;
 import com.aube.camera.presenter.TextureViewPresenter;
 
 /**
  * Created by huyaonan on 17/2/8.
  */
 public class PreviewAndRecordActivity extends Activity implements IPreviewController {
+
+    private static final int REQUEST_PICK_IMAGE = 10000;
 
     private IPreviewPresenter iPresenter;
 
@@ -57,5 +59,28 @@ public class PreviewAndRecordActivity extends Activity implements IPreviewContro
     protected void onPause() {
         super.onPause();
         iPresenter.onPause();
+    }
+
+    private void loadPhotoOrVideoFromAlbum() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, REQUEST_PICK_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case REQUEST_PICK_IMAGE:
+                if (resultCode == RESULT_OK) {
+//                    handleImage(data.getData());
+                } else {
+                    finish();
+                }
+                break;
+
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 }
