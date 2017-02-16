@@ -41,6 +41,9 @@ public class FileUtil {
         String jpegName = path + "/" + dataTake +".jpg";
         Log.i(TAG, "saveBitmap:jpegName = " + jpegName);
         try {
+            File file = new File(jpegName);
+            if(!file.exists())
+                file.createNewFile();
             FileOutputStream fout = new FileOutputStream(jpegName);
             BufferedOutputStream bos = new BufferedOutputStream(fout);
             b.compress(Bitmap.CompressFormat.JPEG, 100, bos);

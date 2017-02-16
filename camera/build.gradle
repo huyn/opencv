@@ -11,12 +11,12 @@ android {
         versionCode 1
         versionName "1.0"
 
-        ndk {
-            moduleName "gpuimage-library"
-            stl "gnustl_shared"
-            abiFilters "all"
-            ldLibs "log"
-        }
+//        ndk {
+//            moduleName "gpuimage-library"
+//            stl "gnustl_shared"
+//            abiFilters "all"
+//            ldLibs "log"
+//        }
     }
 
     buildTypes {

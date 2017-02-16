@@ -59,8 +59,7 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
         mTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CameraInterface.getInstance().doTakePicture();
-//                mCameraInstance.takePictureOrRecordVideo();
+                takePhoto();
             }
         });
     }
@@ -91,6 +90,22 @@ public class SurfaceViewPresenter implements IPreviewPresenter, CameraInterface.
 
     @Override
     public void onPause() {
+
+    }
+
+    @Override
+    public void takePhoto() {
+        CameraInterface.getInstance().doTakePicture();
+//                mCameraInstance.takePictureOrRecordVideo();
+    }
+
+    @Override
+    public void onVideoRecordStart() {
+
+    }
+
+    @Override
+    public void onVideoRecordEnd() {
 
     }
 

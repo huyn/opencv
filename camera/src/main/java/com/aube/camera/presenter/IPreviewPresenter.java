@@ -14,4 +14,7 @@ public interface IPreviewPresenter {
     public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults);
     public void onResume();
     public void onPause();
+    public void takePhoto();
+    public void onVideoRecordStart();
+    public void onVideoRecordEnd();
 }
